@@ -6,6 +6,7 @@ use App\Models\Notification;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class ClientDashboardController extends Controller
@@ -37,13 +38,17 @@ class ClientDashboardController extends Controller
             ->count();
 
         $total = DB::table('appointments')->where('user_id', $userId)->count();
-        $unreadNotifications = $notifications->unreadCount($userId);
-
-        // Recent notifications
-        $recentNotifications = Notification::forUser($userId)
-            ->latest()
-            ->limit(5)
-            ->get();
+        // Only query notifications if the table exists
+        if (Schema::hasTable('notifications')) {
+            $unreadNotifications = $notifications->unreadCount($userId);
+            $recentNotifications = Notification::forUser($userId)
+                ->latest()
+                ->limit(5)
+                ->get();
+        } else {
+            $unreadNotifications = 0;
+            $recentNotifications = collect();
+        }
 
         return view('client.dashboard', compact(
             'appointments', 'total', 'toRate', 'upcoming',

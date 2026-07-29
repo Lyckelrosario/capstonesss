@@ -44,9 +44,9 @@
        <td>{{ $a->appointment_date }} {{ substr($a->appointment_time,0,5) }}</td>
        <td><span class="pill {{ $a->status }}">{{ ucfirst($a->status) }}</span></td>
        <td><div class="actions">
-        @if($a->status==='pending')<form method="post" action="/admin/appointments/{{ $a->id }}/approve">@csrf<button class="btn small primary">Approve</button></form>@endif
-        @if($a->status==='approved')<form method="post" action="/admin/appointments/{{ $a->id }}/complete">@csrf<button class="btn small success">Complete</button></form>@endif
-        @if(in_array($a->status,['pending','approved']))<form method="post" action="/admin/appointments/{{ $a->id }}/cancel">@csrf<button class="btn small red">Cancel</button></form>@endif
+        @if($a->status==='pending')<form method="post" action="{{ url('admin/appointments/'.$a->id.'/approve') }}">@csrf<button class="btn small primary">Approve</button></form>@endif
+        @if($a->status==='approved')<form method="post" action="{{ url('admin/appointments/'.$a->id.'/complete') }}">@csrf<button class="btn small success">Complete</button></form>@endif
+        @if(in_array($a->status,['pending','approved']))<form method="post" action="{{ url('admin/appointments/'.$a->id.'/cancel') }}">@csrf<button class="btn small red">Cancel</button></form>@endif
        </div></td>
      </tr>
      @empty<tr><td colspan="7">No appointments found.</td></tr>@endforelse

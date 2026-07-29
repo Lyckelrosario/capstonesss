@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class AdminDashboardController extends Controller
@@ -16,17 +17,20 @@ class AdminDashboardController extends Controller
         $lowStock = DB::table('products')->where('quantity', '<=', 5)->count();
         $waitingChats = DB::table('chat_conversations')->where('status', 'waiting_for_admin')->count();
 
-        // Recent activity
-        $recentActivity = DB::table('activity_logs')
-            ->join('users', 'users.id', '=', 'activity_logs.user_id')
-            ->select('activity_logs.action', 'activity_logs.description', 'activity_logs.created_at', 'users.name as user_name')
-            ->latest('activity_logs.created_at')
-            ->limit(10)
-            ->get();
+        // Recent activity (only query if the table exists)
+        if (Schema::hasTable('activity_logs')) {
+            $recentActivity = DB::table('activity_logs')
+                ->join('users', 'users.id', '=', 'activity_logs.user_id')
+                ->select('activity_logs.action', 'activity_logs.description', 'activity_logs.created_at', 'users.name as user_name')
+                ->latest('activity_logs.created_at')
+                ->limit(10)
+                ->get();
 
-        // Map created_at to Carbon for diffForHumans
-        foreach ($recentActivity as $log) {
-            $log->created_at = \Carbon\Carbon::parse($log->created_at);
+            foreach ($recentActivity as $log) {
+                $log->created_at = \Carbon\Carbon::parse($log->created_at);
+            }
+        } else {
+            $recentActivity = collect();
         }
 
         // Total revenue this month

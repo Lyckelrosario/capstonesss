@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Complete Registration | 4BS Garage')
 @section('content')
-<form class="form" method="post" action="/register/complete">@csrf
+<form class="form" method="post" action="{{ url('register/complete') }}">@csrf
 <h2>Complete your profile</h2><p class="muted">Use a strong password with uppercase and lowercase letters and at least one number.</p>
 <label for="name">Full name</label><input id="name" name="name" value="{{ old('name') }}" autocomplete="name" maxlength="120" required autofocus>
 <label for="phone">Phone number</label><input id="phone" name="phone" value="{{ old('phone') }}" autocomplete="tel" maxlength="30" required>

@@ -5,7 +5,7 @@
 @include('partials.client-sidebar')
 <section>
  <p class="eyebrow">Service booking</p><h1 class="page-title">Book an appointment</h1><p class="page-copy">Choose an active mechanic and service. The system prevents two active bookings for the same mechanic and time.</p>
- <form class="card" method="post" action="/client/appointment">@csrf
+ <form class="card" method="post" action="{{ url('client/appointment') }}">@csrf
  <div class="grid">
   <div><label for="mechanic_id">Preferred mechanic</label><select id="mechanic_id" name="mechanic_id" required><option value="">Choose a mechanic</option>@foreach($mechanics as $m)<option value="{{ $m->id }}" @selected(old('mechanic_id')==$m->id)>{{ $m->name }} — {{ $m->specialty }}</option>@endforeach</select></div>
   <div><label for="service_id">Service</label><select id="service_id" name="service_id" required><option value="">Choose a service</option>@foreach($services as $s)<option value="{{ $s->id }}" @selected(old('service_id')==$s->id)>{{ $s->name }} — ₱{{ number_format($s->price,2) }}</option>@endforeach</select></div>

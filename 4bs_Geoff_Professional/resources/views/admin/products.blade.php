@@ -9,7 +9,7 @@
   <p class="page-copy">Add products and record sold quantities. Deductions use a database lock to prevent stock from going below zero.</p>
 
   <div class="card">
-   <form method="post" action="/admin/products">@csrf
+   <form method="post" action="{{ url('admin/products') }}">@csrf
     <div class="grid">
      <div><label>Brand</label><input name="brand" value="{{ old('brand') }}" maxlength="120" required></div>
      <div><label>Product name</label><input name="name" value="{{ old('name') }}" maxlength="160" required></div>
@@ -57,7 +57,7 @@
          <td>₱{{ number_format($p->price,2) }}</td>
          <td>
            @if($p->quantity>0)
-             <form class="actions" method="post" action="/admin/products/{{ $p->id }}/sell">@csrf<input aria-label="Quantity sold" style="max-width:90px;margin:0" name="quantity" type="number" min="1" max="{{ $p->quantity }}" required><button class="btn small primary">Deduct</button></form>
+             <form class="actions" method="post" action="{{ url('admin/products/'.$p->id.'/sell') }}">@csrf<input aria-label="Quantity sold" style="max-width:90px;margin:0" name="quantity" type="number" min="1" max="{{ $p->quantity }}" required><button class="btn small primary">Deduct</button></form>
            @else
              <span class="muted">Out of stock</span>
            @endif

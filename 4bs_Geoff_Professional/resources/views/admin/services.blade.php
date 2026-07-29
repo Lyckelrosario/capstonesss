@@ -9,7 +9,7 @@
   <p class="page-copy">Manage the services offered by the garage.</p>
 
   <div class="card">
-   <form method="post" action="/admin/services">@csrf
+   <form method="post" action="{{ url('admin/services') }}">@csrf
      <div class="grid">
        <div><label>Service name</label><input name="name" value="{{ old('name') }}" maxlength="160" required></div>
        <div><label>Price (₱)</label><input name="price" type="number" min="0" step=".01" value="{{ old('price') }}" required></div>

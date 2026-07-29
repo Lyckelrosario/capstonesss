@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Sign In | 4BS Garage')
 @section('content')
-<form class="form" method="post" action="/login">@csrf
+<form class="form" method="post" action="{{ url('login') }}">@csrf
 <h2>Welcome back</h2><p class="muted">Sign in to access your 4BS Garage workspace.</p>
 <label for="email">Email</label><input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required autofocus>
 <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required>

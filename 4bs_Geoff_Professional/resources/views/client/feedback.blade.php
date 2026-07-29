@@ -3,8 +3,7 @@
 <div class="sidebar-layout">
 @include('partials.client-sidebar')
 <div><h2>Rate Completed Services</h2>
- @forelse($appointments as $a)
- <form class="card" method="post" action="/client/feedback">@csrf
+ @forelse($appointments as $a)  <form class="card" method="post" action="{{ url('client/feedback') }}">@csrf
   <input type="hidden" name="appointment_id" value="{{ $a->id }}">
   <h3>{{ $a->service }} with {{ $a->mechanic }}</h3>
   <p class="muted">{{ $a->appointment_date }} — Your feedback helps improve the shop.</p>

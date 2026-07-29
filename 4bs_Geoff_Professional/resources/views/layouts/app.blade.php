@@ -4,10 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="base-url" content="{{ url('/') }}">
 <title>@yield('title', config('app.name'))</title>
-<link rel="stylesheet" href="/css/style.css">
-@viteReactRefresh
-@vite('resources/js/app.tsx')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{{-- Vite assets: build with `npm run build` for production or run `npm run dev` for hot reload --}}
+@php
+    // Gracefully handle missing Vite manifest (avoids 500 when assets aren't built)
+    $manifestPath = public_path('build/manifest.json');
+@endphp
+@if(file_exists($manifestPath))
+    @viteReactRefresh
+    @vite('resources/js/app.tsx')
+@endif
 </head>
 <body data-onboarding="{{ auth()->check() && auth()->user()->role === 'client' && !auth()->user()->onboarding_completed_at ? 'pending' : 'complete' }}">
 <nav class="nav" aria-label="Main navigation">
@@ -57,6 +65,7 @@
 @auth
 {{-- Notification bell scripts --}}
 <script>
+const BASE_URL = (document.querySelector('meta[name="base-url"]')?.content ?? '').replace(/\/+$/, '');
 let notifCount = 0;
 
 function toggleNotifications() {
@@ -68,7 +77,7 @@ function toggleNotifications() {
 
 async function loadNotifications() {
   try {
-    const res = await fetch('/notifications', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } });
+    const res = await fetch(BASE_URL + '/notifications', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } });
     const data = await res.json();
     const list = document.getElementById('notif-list');
     if (data.notifications.length === 0) {
@@ -87,7 +96,7 @@ async function loadNotifications() {
 
 async function loadUnreadCount() {
   try {
-    const res = await fetch('/notifications/unread-count', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } });
+    const res = await fetch(BASE_URL + '/notifications/unread-count', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } });
     const data = await res.json();
     const badge = document.getElementById('notif-badge');
     if (data.count > 0) {
@@ -101,7 +110,7 @@ async function loadUnreadCount() {
 
 async function markRead(id) {
   try {
-    await fetch('/notifications/' + id + '/read', { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'X-Requested-With': 'XMLHttpRequest' } });
+    await fetch(BASE_URL + '/notifications/' + id + '/read', { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'X-Requested-With': 'XMLHttpRequest' } });
     loadNotifications();
     loadUnreadCount();
   } catch {}
@@ -109,7 +118,7 @@ async function markRead(id) {
 
 async function markAllRead() {
   try {
-    await fetch('/notifications/read-all', { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'X-Requested-With': 'XMLHttpRequest' } });
+    await fetch(BASE_URL + '/notifications/read-all', { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'X-Requested-With': 'XMLHttpRequest' } });
     loadNotifications();
     loadUnreadCount();
   } catch {}

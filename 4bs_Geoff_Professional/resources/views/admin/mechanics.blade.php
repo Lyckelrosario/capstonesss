@@ -9,7 +9,7 @@
   <p class="page-copy">Manage the mechanics and their specialties.</p>
 
   <div class="card">
-   <form method="post" action="/admin/mechanics">@csrf
+   <form method="post" action="{{ url('admin/mechanics') }}">@csrf
      <div class="grid">
        <div><label>Full name</label><input name="name" value="{{ old('name') }}" maxlength="120" placeholder="Mechanic name" required></div>
        <div><label>Specialty</label><input name="specialty" value="{{ old('specialty') }}" maxlength="160" placeholder="e.g. Brake & underchassis" required></div>
