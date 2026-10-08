@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "framework": "vite",
+    "functions": {
+        "api/**/*.php": {
+            "runtime": "vercel-php@0.7.3"
+        }
+    },
+    "routes": [
+        {
+            "src": "/build/(.*)",
+            "dest": "/public/build/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/public/index.php"
+        }
+    ]
+}
